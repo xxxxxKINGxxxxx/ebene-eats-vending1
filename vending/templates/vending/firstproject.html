@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EbeneEats Vending Machine</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-bg: #ecf0f1;
+            --machine-bg: #34495e;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            --hover-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .machine-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--machine-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border: 8px solid #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #1a252f);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 3px solid var(--accent-color);
+        }
+
+        .campus-logo {
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        h1 {
+            font-weight: 800;
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .category-title {
+            color: white;
+            background: linear-gradient(135deg, var(--accent-color), #2980b9);
+            padding: 15px 20px;
+            margin: 30px 0 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid var(--warning-color);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card.selected {
+            border-color: var(--success-color);
+            box-shadow: 0 0 0 3px var(--success-color);
+            transform: scale(1.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--warning-color));
+        }
+
+        .product-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .product-card h6 {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .price {
+            color: var(--secondary-color);
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin: 8px 0;
+        }
+
+        .quantity {
+            font-size: 0.85rem;
+            margin: 5px 0;
+            font-weight: 600;
+        }
+
+        .stock-low {
+            color: var(--warning-color);
+            background: #fff3cd;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .stock-out {
+            color: var(--secondary-color);
+            background: #f8d7da;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .stock-good {
+            color: var(--success-color);
+        }
+
+        .product-id {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        .control-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .denomination-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .denom-btn {
+            background: white;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .denom-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, var(--accent-color), #2980b9);
+            color: white;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 700;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .display-panel {
+            background: #2c3e50;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            margin: 15px 0;
+            border: 3px solid #1a252f;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .input-group-custom {
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .input-group-custom input {
+            border: none;
+            padding: 12px;
+        }
+
+        .input-group-custom .input-group-text {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-balance {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-success {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #bdc3c7;
+            font-size: 0.9rem;
+            padding: 20px 0;
+        }
+
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .machine-container {
+                padding: 15px;
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .product-card img {
+                width: 80px;
+                height: 80px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="machine-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="d-flex align-items-center justify-content-center">
+            <img src="https://scontent.fmru3-1.fna.fbcdn.net/v/t39.30808-6/302274213_450718537095543_3635824563792001701_n.png?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=WMw8m7EDNSwQ7kNvwFMP9E8&_nc_oc=AdnJnmixrN0lx1ZghWRxO-I4FA-5iM50UMwJcqfe16I7gQOiyG_Pi8UO9_a4DbefqOM&_nc_zt=23&_nc_ht=scontent.fmru3-1.fna&_nc_gid=mYBN13EWTZKVkDc8M02GNQ&oh=00_Afdd690DulbW5u9pKxgsm7derGeQP3aoCLxklZKKdrHuVA&oe=68FEA4AC" 
+                 alt="Campus Logo" class="campus-logo">
+            <div>
+                <h1>🍫 EbeneEats Vending Machine 🥤</h1>
+                <p class="subtitle">Polytechnics Ebene Campus - Your Snack Destination</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Savory Snacks Section (First) -->
+    <h3 class="category-title"><i class="fas fa-pepper-hot"></i> Savory Snacks</h3>
+    <div class="product-grid">
+        <div class="product-card" data-id="B1" data-price="35" data-stock="8">
+            <div class="product-id">B1</div>
+            <img src="https://m.media-amazon.com/images/I/61H-xa+ODJL._SL1122_.jpg" alt="Doritos Original">
+            <h6>Doritos Original</h6>
+            <p class="price">Rs 35.00</p>
+            <p class="quantity stock-good">Qty: 8 left</p>
+        </div>
+        <div class="product-card" data-id="B2" data-price="30" data-stock="12">
+            <div class="product-id">B2</div>
+            <img src="https://m.media-amazon.com/images/I/61e+UwnsWwL._SL1500_.jpg" alt="Lays Original">
+            <h6>Lays Original</h6>
+            <p class="price">Rs 30.00</p>
+            <p class="quantity stock-good">Qty: 12 left</p>
+        </div>
+        <div class="product-card" data-id="B3" data-price="20" data-stock="14">
+            <div class="product-id">B3</div>
+            <img src="https://www.tastysnack.asia/cdn/shop/files/poppop_600x.png?v=1709893033" alt="Pop Pop">
+            <h6>Pop Pop</h6>
+            <p class="price">Rs 20.00</p>
+            <p class="quantity stock-good">Qty: 14 left</p>
+        </div>
+        <div class="product-card" data-id="B4" data-price="25" data-stock="3">
+            <div class="product-id">B4</div>
+            <img src="https://m.media-amazon.com/images/I/61yGD1N0t-L._SL1000_.jpg" alt="Twisties">
+            <h6>Twisties</h6>
+            <p class="price">Rs 25.00</p>
+            <p class="quantity stock-low">Last 3 in stock!</p>
+        </div>
+        <div class="product-card" data-id="B5" data-price="20" data-stock="16">
+            <div class="product-id">B5</div>
+            <img src="https://stock4u-data.s3.ap-southeast-2.amazonaws.com/wp-content/uploads/2024/02/14151516/O04-CHEESE-BALLS.jpg" alt="Cheese Balls">
+            <h6>Cheese Balls</h6>
+            <p class="price">Rs 20.00</p>
+            <p class="quantity stock-good">Qty: 16 left</p>
+        </div>
+    </div>
+
+    <!-- Sweet Treats Section (Second) -->
+    <h3 class="category-title"><i class="fas fa-cookie-bite"></i> Sweet Treats</h3>
+    <div class="product-grid">
+        <div class="product-card" data-id="A1" data-price="25" data-stock="10">
+            <div class="product-id">A1</div>
+            <img src="https://cdn.mafrservices.com/pim-content/UAE/media/product/965026/1748604003/965026_main.jpg" alt="Sando Chocolate">
+            <h6>Sando Chocolate</h6>
+            <p class="price">Rs 25.00</p>
+            <p class="quantity stock-good">Qty: 10 left</p>
+        </div>
+        <div class="product-card" data-id="A2" data-price="30" data-stock="3">
+            <div class="product-id">A2</div>
+            <img src="https://m.media-amazon.com/images/I/81HtU-ohK1S._SL1500_.jpg" alt="Today Croissant">
+            <h6>TODAY Croissant</h6>
+            <p class="price">Rs 30.00</p>
+            <p class="quantity stock-low">Last 3 in stock!</p>
+        </div>
+        <div class="product-card" data-id="A3" data-price="20" data-stock="12">
+            <div class="product-id">A3</div>
+            <img src="https://singlos.com/wp-content/uploads/2020/05/BISKUIT_SLAI-OLAI-STRAWBERRY-240G-x-20-R2-2.jpg" alt="Slai O'lai">
+            <h6>Slai O'lai</h6>
+            <p class="price">Rs 20.00</p>
+            <p class="quantity stock-good">Qty: 12 left</p>
+        </div>
+        <div class="product-card" data-id="A4" data-price="25" data-stock="10">
+            <div class="product-id">A4</div>
+            <img src="https://m.media-amazon.com/images/I/61rwQ8sSpgL._SL1200_.jpg" alt="Astor">
+            <h6>Astor Wafer Sticks</h6>
+            <p class="price">Rs 25.00</p>
+            <p class="quantity stock-good">Qty: 10 left</p>
+        </div>
+        <div class="product-card" data-id="A5" data-price="15" data-stock="15">
+            <div class="product-id">A5</div>
+            <img src="https://images-cdn.ubuy.mu/68f8d77489149ed22002f050-apollo-chocolate-layer-cake.jpg" alt="Apollo Cake">
+            <h6>Apollo Cake</h6>
+            <p class="price">Rs 15.00</p>
+            <p class="quantity stock-good">Qty: 15 left</p>
+        </div>
+    </div>
+
+    <!-- Drinks Section (Third) -->
+    <h3 class="category-title"><i class="fas fa-wine-bottle"></i> Drinks</h3>
+    <div class="product-grid">
+        <div class="product-card" data-id="C1" data-price="40" data-stock="10">
+            <div class="product-id">C1</div>
+            <img src="https://shop.phoenixbev.mu/wp-content/uploads/1051-1-1.jpg" alt="Coca Cola">
+            <h6>Coca Cola 500ml</h6>
+            <p class="price">Rs 40.00</p>
+            <p class="quantity stock-good">Qty: 10 left</p>
+        </div>
+        <div class="product-card" data-id="C2" data-price="40" data-stock="10">
+            <div class="product-id">C2</div>
+            <img src="https://shop.phoenixbev.mu/wp-content/uploads/2051-1-2.jpg" alt="Sprite">
+            <h6>Sprite 500ml</h6>
+            <p class="price">Rs 40.00</p>
+            <p class="quantity stock-good">Qty: 10 left</p>
+        </div>
+        <div class="product-card" data-id="C3" data-price="40" data-stock="4">
+            <div class="product-id">C3</div>
+            <img src="https://shop.phoenixbev.mu/wp-content/uploads/3051-1.jpg" alt="Fanta Orange">
+            <h6>Fanta Orange 500ml</h6>
+            <p class="price">Rs 40.00</p>
+            <p class="quantity stock-low">Last 4 in stock!</p>
+        </div>
+        <div class="product-card" data-id="C4" data-price="25" data-stock="15">
+            <div class="product-id">C4</div>
+            <img src="https://shop.phoenixbev.mu/wp-content/uploads/2952-1-1.jpg" alt="Crystal Water">
+            <h6>Crystal Water 500ml</h6>
+            <p class="price">Rs 25.00</p>
+            <p class="quantity stock-good">Qty: 15 left</p>
+        </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <h4 class="section-title"><i class="fas fa-gamepad"></i> Control Panel</h4>
+        
+        <!-- Display Screen -->
+        <div class="display-panel" id="displayScreen">
+            WELCOME! SELECT ITEM & INSERT MONEY
+        </div>
+
+        <!-- Balance Display -->
+        <div class="status-indicator status-balance" id="balanceIndicator">
+            <i class="fas fa-coins"></i> Current Balance: Rs <span id="balanceAmount">0.00</span>
+        </div>
+
+        <!-- Item Selection -->
+        <div class="mb-4">
+            <label class="form-label fw-bold">Select Item (Click product or enter code):</label>
+            <div class="input-group input-group-custom mb-2">
+                <span class="input-group-text">Item Code</span>
+                <input type="text" class="form-control" id="itemCodeInput" placeholder="e.g., A1, B2, C3" maxlength="2">
+                <button class="btn btn-action" id="selectCodeBtn">Select</button>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Selected: <span id="selectedItemText">None</span></small>
+                <span id="selectedPrice" class="fw-bold text-success"></span>
+            </div>
+        </div>
+
+        <!-- Money Insertion -->
+        <div class="mb-4">
+            <label class="form-label fw-bold">Insert Money:</label>
+            <div class="denomination-buttons">
+                <button class="btn denom-btn" data-amount="5">Rs 5</button>
+                <button class="btn denom-btn" data-amount="10">Rs 10</button>
+                <button class="btn denom-btn" data-amount="20">Rs 20</button>
+                <button class="btn denom-btn" data-amount="50">Rs 50</button>
+                <button class="btn denom-btn" data-amount="100">Rs 100</button>
+            </div>
+            <div class="input-group input-group-custom mt-2">
+                <span class="input-group-text">Custom</span>
+                <input type="number" min="5" step="5" placeholder="Enter amount" class="form-control" id="customAmount">
+                <button class="btn btn-action" id="insertBtn">Insert</button>
+            </div>
+        </div>
+
+        <!-- Purchase Button -->
+        <div class="text-center">
+            <button class="btn btn-success btn-action" id="purchaseBtn" disabled>
+                <i class="fas fa-shopping-cart"></i> PURCHASE ITEM
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p>EbeneEats © 2025 | Powered by Django | Polytechnics Ebene Campus</p>
+    </footer>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="confirmation-modal" id="confirmationModal">
+    <div class="modal-content">
+        <h3 class="text-success mb-3"><i class="fas fa-check-circle"></i> Purchase Successful!</h3>
+        <p id="purchaseMessage" class="mb-4">Thank you for your purchase and have a great day!</p>
+        <button class="btn btn-action" id="closeModalBtn">Continue Shopping</button>
+    </div>
+</div>
+
+<script>
+    // Global variables
+    let currentBalance = 0;
+    let selectedProduct = null;
+
+    // Initialize event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        // Product selection by clicking
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', function() {
+                selectProduct(this);
+            });
+        });
+
+        // Code selection
+        document.getElementById('selectCodeBtn').addEventListener('click', selectByCode);
+        document.getElementById('itemCodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') selectByCode();
+        });
+
+        // Denomination buttons
+        document.querySelectorAll('.denom-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const amount = parseInt(this.getAttribute('data-amount'));
+                addMoney(amount);
+            });
+        });
+
+        // Custom amount insertion
+        document.getElementById('insertBtn').addEventListener('click', function() {
+            const amount = parseInt(document.getElementById('customAmount').value);
+            if (amount && amount >= 5) {
+                addMoney(amount);
+                document.getElementById('customAmount').value = '';
+            } else {
+                showMessage('Please enter a valid amount (minimum Rs 5)', 'error');
+            }
+        });
+
+        // Purchase button
+        document.getElementById('purchaseBtn').addEventListener('click', processPurchase);
+
+        // Modal close
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            document.getElementById('confirmationModal').style.display = 'none';
+            resetTransaction();
+        });
+    });
+
+    // Select product by clicking
+    function selectProduct(card) {
+        // Remove previous selection
+        document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+        
+        // Add new selection
+        card.classList.add('selected');
+        
+        const productId = card.getAttribute('data-id');
+        const productPrice = parseFloat(card.getAttribute('data-price'));
+        const productStock = parseInt(card.getAttribute('data-stock'));
+        const productName = card.querySelector('h6').textContent;
+
+        selectedProduct = {
+            id: productId,
+            name: productName,
+            price: productPrice,
+            stock: productStock,
+            element: card
+        };
+
+        // Update UI
+        document.getElementById('selectedItemText').textContent = `${productId} - ${productName}`;
+        document.getElementById('selectedPrice').textContent = `Rs ${productPrice.toFixed(2)}`;
+        document.getElementById('itemCodeInput').value = productId;
+
+        // Check if purchase is possible
+        updatePurchaseButton();
+
+        showMessage(`Selected: ${productName} - Rs ${productPrice.toFixed(2)}`, 'info');
+    }
+
+    // Select product by code
+    function selectByCode() {
+        const code = document.getElementById('itemCodeInput').value.toUpperCase();
+        const productCard = document.querySelector(`.product-card[data-id="${code}"]`);
+        
+        if (productCard) {
+            selectProduct(productCard);
+        } else {
+            showMessage('Invalid product code! Please try again.', 'error');
+        }
+    }
+
+    // Add money to balance
+    function addMoney(amount) {
+        currentBalance += amount;
+        updateBalanceDisplay();
+        showMessage(`Added Rs ${amount.toFixed(2)} to balance`, 'success');
+        updatePurchaseButton();
+    }
+
+    // Update balance display
+    function updateBalanceDisplay() {
+        document.getElementById('balanceAmount').textContent = currentBalance.toFixed(2);
+    }
+
+    // Update purchase button state
+    function updatePurchaseButton() {
+        const purchaseBtn = document.getElementById('purchaseBtn');
+        
+        if (selectedProduct && currentBalance >= selectedProduct.price && selectedProduct.stock > 0) {
+            purchaseBtn.disabled = false;
+            purchaseBtn.innerHTML = `<i class="fas fa-shopping-cart"></i> PURCHASE (Rs ${selectedProduct.price.toFixed(2)})`;
+        } else {
+            purchaseBtn.disabled = true;
+            purchaseBtn.innerHTML = `<i class="fas fa-shopping-cart"></i> PURCHASE ITEM`;
+        }
+    }
+
+    // Process purchase
+    function processPurchase() {
+        if (!selectedProduct) {
+            showMessage('Please select an item first!', 'error');
+            return;
+        }
+
+        if (currentBalance < selectedProduct.price) {
+            showMessage('Insufficient balance! Please insert more money.', 'error');
+            return;
+        }
+
+        if (selectedProduct.stock <= 0) {
+            showMessage('Sorry, this item is out of stock!', 'error');
+            return;
+        }
+
+        // Process the purchase
+        const change = currentBalance - selectedProduct.price;
+        
+        // Update stock (simulate database update)
+        selectedProduct.stock--;
+        selectedProduct.element.setAttribute('data-stock', selectedProduct.stock);
+        
+        // Update stock display
+        const stockElement = selectedProduct.element.querySelector('.quantity');
+        if (selectedProduct.stock <= 3 && selectedProduct.stock > 0) {
+            stockElement.className = 'quantity stock-low';
+            stockElement.textContent = `Last ${selectedProduct.stock} in stock!`;
+        } else if (selectedProduct.stock === 0) {
+            stockElement.className = 'quantity stock-out';
+            stockElement.textContent = 'Out of stock!';
+            selectedProduct.element.style.opacity = '0.6';
+        } else {
+            stockElement.textContent = `Qty: ${selectedProduct.stock} left`;
+        }
+
+        // Show success message
+        let message = `Thank you for purchasing ${selectedProduct.name}!`;
+        if (change > 0) {
+            message += ` Your change: Rs ${change.toFixed(2)}`;
+        }
+        message += " Have a great day!";
+
+        document.getElementById('purchaseMessage').textContent = message;
+        document.getElementById('confirmationModal').style.display = 'flex';
+        
+        showMessage(`Purchase successful! ${selectedProduct.name} dispensed.`, 'success');
+    }
+
+    // Reset transaction
+    function resetTransaction() {
+        currentBalance = 0;
+        selectedProduct = null;
+        
+        document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+        document.getElementById('selectedItemText').textContent = 'None';
+        document.getElementById('selectedPrice').textContent = '';
+        document.getElementById('itemCodeInput').value = '';
+        
+        updateBalanceDisplay();
+        updatePurchaseButton();
+        showMessage('WELCOME! SELECT ITEM & INSERT MONEY', 'info');
+    }
+
+    // Show message on display
+    function showMessage(message, type) {
+        const display = document.getElementById('displayScreen');
+        display.textContent = message;
+        
+        // Reset color
+        display.style.color = '#00ff00';
+        
+        if (type === 'error') {
+            display.style.color = '#ff4444';
+        } else if (type === 'success') {
+            display.style.color = '#00ff00';
+        } else if (type === 'info') {
+            display.style.color = '#ffff00';
+        }
+    }
+</script>
+
+</body>
+</html>
