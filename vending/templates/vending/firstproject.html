@@ -338,6 +338,201 @@
             text-align: center;
         }
 
+        /* Admin Panel Styles */
+        .admin-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-panel {
+            background: white;
+            width: 90%;
+            height: 90%;
+            border-radius: 15px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px 0;
+        }
+
+        .admin-content {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background: #34495e;
+            border-left-color: #3498db;
+        }
+
+        .sidebar-item.active {
+            background: #34495e;
+            border-left-color: #e74c3c;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* Transaction Table */
+        .transaction-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .transaction-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transaction-table th {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .transaction-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .transaction-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Product Management */
+        .product-form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Login Modal */
+        .login-modal {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .password-input {
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+
+        .product-item {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 15px;
+        }
+
         @media (max-width: 768px) {
             .machine-container {
                 padding: 15px;
@@ -354,6 +549,17 @@
             
             h1 {
                 font-size: 1.8rem;
+            }
+
+            .admin-panel {
+                flex-direction: column;
+                width: 95%;
+                height: 95%;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
             }
         }
     </style>
@@ -553,6 +759,202 @@
     </div>
 </div>
 
+<!-- Admin Button -->
+<button class="admin-btn" id="adminBtn">
+    <i class="fas fa-cog"></i> ADMIN
+</button>
+
+<!-- Login Modal -->
+<div class="admin-modal" id="loginModal">
+    <div class="login-modal">
+        <h3 class="mb-4"><i class="fas fa-lock"></i> Admin Access</h3>
+        <div class="form-group">
+            <input type="password" class="form-control password-input" id="adminPassword" 
+                   placeholder="Enter Admin Password" maxlength="4">
+        </div>
+        <button class="btn btn-action w-100" id="loginBtn">Login</button>
+        <p class="text-muted mt-3">Default Password: 1234</p>
+    </div>
+</div>
+
+<!-- Admin Panel -->
+<div class="admin-modal" id="adminPanel">
+    <div class="admin-panel">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="text-center mb-4">
+                <h4><i class="fas fa-user-shield"></i> Admin Panel</h4>
+            </div>
+            <div class="sidebar-item active" data-section="transactions">
+                <i class="fas fa-receipt"></i> Transactions
+            </div>
+            <div class="sidebar-item" data-section="products">
+                <i class="fas fa-boxes"></i> Product Management
+            </div>
+            <div class="sidebar-item" data-section="settings">
+                <i class="fas fa-cogs"></i> Admin Settings
+            </div>
+            <div class="sidebar-item" data-section="reports">
+                <i class="fas fa-chart-bar"></i> Reports
+            </div>
+            <div class="sidebar-item mt-4" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="admin-content">
+            <!-- Transactions Section -->
+            <div class="admin-section active" id="transactionsSection">
+                <h3 class="mb-4"><i class="fas fa-receipt"></i> Transaction History</h3>
+                <div class="transaction-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Item ID</th>
+                                <th>Item Name</th>
+                                <th>Price (Rs)</th>
+                                <th>Amount Paid (Rs)</th>
+                                <th>Change (Rs)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionTable">
+                            <!-- Transactions will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Product Management Section -->
+            <div class="admin-section" id="productsSection">
+                <h3 class="mb-4"><i class="fas fa-boxes"></i> Product Management</h3>
+                
+                <!-- Add Product Form -->
+                <div class="product-form">
+                    <h5 class="mb-3">Add New Product</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Item ID</label>
+                                <input type="text" class="form-control" id="newItemId" placeholder="e.g., D1">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Product Name</label>
+                                <input type="text" class="form-control" id="newItemName" placeholder="Enter product name">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Price (Rs)</label>
+                                <input type="number" class="form-control" id="newItemPrice" placeholder="0.00" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Stock Quantity</label>
+                                <input type="number" class="form-control" id="newItemStock" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Image URL</label>
+                                <input type="text" class="form-control" id="newItemImage" placeholder="https://example.com/image.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-admin" id="addProductBtn">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+
+                <!-- Products List -->
+                <div class="product-form">
+                    <h5 class="mb-3">Current Products</h5>
+                    <div id="productsList">
+                        <!-- Products will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Settings Section -->
+            <div class="admin-section" id="settingsSection">
+                <h3 class="mb-4"><i class="fas fa-cogs"></i> Admin Settings</h3>
+                <div class="product-form">
+                    <h5 class="mb-3">System Configuration</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Change Admin Password</label>
+                                <input type="password" class="form-control" id="newPassword" placeholder="New Password">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-admin" id="changePasswordBtn">
+                        <i class="fas fa-key"></i> Update Password
+                    </button>
+                </div>
+
+                <div class="product-form mt-4">
+                    <h5 class="mb-3">System Information</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h3 id="totalProducts">0</h3>
+                                    <p class="text-muted">Total Products</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h3 id="totalSales">0</h3>
+                                    <p class="text-muted">Total Sales</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h3 id="lowStockItems">0</h3>
+                                    <p class="text-muted">Low Stock Items</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div class="admin-section" id="reportsSection">
+                <h3 class="mb-4"><i class="fas fa-chart-bar"></i> Sales Reports</h3>
+                <div class="product-form">
+                    <h5 class="mb-3">Daily Sales Summary</h5>
+                    <div id="salesChart">
+                        <!-- Chart will be implemented here -->
+                        <p class="text-center text-muted py-4">
+                            <i class="fas fa-chart-line fa-3x mb-3"></i><br>
+                            Sales analytics dashboard coming soon...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Global variables
     let currentBalance = 0;
@@ -692,6 +1094,9 @@
         // Process the purchase
         const change = currentBalance - selectedProduct.price;
         
+        // Save transaction to localStorage
+        saveTransaction(selectedProduct, currentBalance, change);
+        
         // Update stock (simulate database update)
         selectedProduct.stock--;
         selectedProduct.element.setAttribute('data-stock', selectedProduct.stock);
@@ -720,6 +1125,22 @@
         document.getElementById('confirmationModal').style.display = 'flex';
         
         showMessage(`Purchase successful! ${selectedProduct.name} dispensed.`, 'success');
+    }
+
+    // Save transaction to localStorage
+    function saveTransaction(product, amountPaid, change) {
+        const transaction = {
+            timestamp: new Date().toISOString(),
+            itemId: product.id,
+            itemName: product.name,
+            price: product.price,
+            amountPaid: amountPaid,
+            change: change
+        };
+
+        let transactions = JSON.parse(localStorage.getItem('vending_transactions') || '[]');
+        transactions.push(transaction);
+        localStorage.setItem('vending_transactions', JSON.stringify(transactions));
     }
 
     // Reset transaction
@@ -752,6 +1173,273 @@
         } else if (type === 'info') {
             display.style.color = '#ffff00';
         }
+    }
+
+    // Admin Panel Functionality
+    const ADMIN_PASSWORD = "1234";
+
+    // Admin Button Event Listeners
+    document.getElementById('adminBtn').addEventListener('click', showLoginModal);
+    document.getElementById('loginBtn').addEventListener('click', handleLogin);
+    document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+    document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+
+    // Sidebar Navigation
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+        if (!item.id) { // Exclude logout button
+            item.addEventListener('click', function() {
+                // Update active states
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+                
+                this.classList.add('active');
+                const section = this.getAttribute('data-section');
+                document.getElementById(section + 'Section').classList.add('active');
+                
+                // Load specific section data
+                if (section === 'transactions') {
+                    loadTransactions();
+                } else if (section === 'products') {
+                    loadProducts();
+                } else if (section === 'settings') {
+                    updateSystemStats();
+                }
+            });
+        }
+    });
+
+    // Product Management
+    document.getElementById('addProductBtn').addEventListener('click', addNewProduct);
+
+    // Password Change
+    document.getElementById('changePasswordBtn').addEventListener('click', changePassword);
+
+    function showLoginModal() {
+        document.getElementById('loginModal').style.display = 'flex';
+        document.getElementById('adminPassword').focus();
+    }
+
+    function handleLogin() {
+        const password = document.getElementById('adminPassword').value;
+        if (password === ADMIN_PASSWORD) {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'flex';
+            document.getElementById('adminPassword').value = '';
+            loadAdminData();
+        } else {
+            showMessage('Invalid password!', 'error');
+            document.getElementById('adminPassword').value = '';
+        }
+    }
+
+    function handleLogout() {
+        document.getElementById('adminPanel').style.display = 'none';
+        showMessage('Logged out successfully', 'success');
+    }
+
+    function loadAdminData() {
+        loadTransactions();
+        loadProducts();
+        updateSystemStats();
+    }
+
+    function loadTransactions() {
+        const table = document.getElementById('transactionTable');
+        table.innerHTML = '';
+        
+        const transactions = JSON.parse(localStorage.getItem('vending_transactions') || '[]');
+        
+        if (transactions.length === 0) {
+            table.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">No transactions yet</td></tr>';
+            return;
+        }
+        
+        transactions.slice().reverse().forEach(transaction => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${new Date(transaction.timestamp).toLocaleString()}</td>
+                <td>${transaction.itemId}</td>
+                <td>${transaction.itemName}</td>
+                <td>Rs ${transaction.price.toFixed(2)}</td>
+                <td>Rs ${transaction.amountPaid.toFixed(2)}</td>
+                <td>Rs ${transaction.change.toFixed(2)}</td>
+                <td><span class="badge bg-success">Completed</span></td>
+            `;
+            table.appendChild(row);
+        });
+    }
+
+    function loadProducts() {
+        const productsList = document.getElementById('productsList');
+        productsList.innerHTML = '';
+        
+        document.querySelectorAll('.product-card').forEach(card => {
+            const productId = card.getAttribute('data-id');
+            const productName = card.querySelector('h6').textContent;
+            const price = card.getAttribute('data-price');
+            const stock = card.getAttribute('data-stock');
+            const imageSrc = card.querySelector('img').src;
+            
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product-item';
+            productDiv.innerHTML = `
+                <div class="row align-items-center">
+                    <div class="col-md-2">
+                        <strong>${productId}</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <img src="${imageSrc}" alt="${productName}" style="width: 50px; height: 50px; object-fit: contain;">
+                    </div>
+                    <div class="col-md-3">
+                        ${productName}
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control stock-input" value="${stock}" 
+                               data-id="${productId}" min="0">
+                    </div>
+                    <div class="col-md-2">
+                        Rs ${parseFloat(price).toFixed(2)}
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-danger btn-sm delete-product" data-id="${productId}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+            productsList.appendChild(productDiv);
+        });
+
+        // Add event listeners for dynamic elements
+        document.querySelectorAll('.stock-input').forEach(input => {
+            input.addEventListener('change', updateProductStock);
+        });
+        
+        document.querySelectorAll('.delete-product').forEach(btn => {
+            btn.addEventListener('click', deleteProduct);
+        });
+    }
+
+    function updateProductStock(e) {
+        const productId = e.target.getAttribute('data-id');
+        const newStock = e.target.value;
+        const card = document.querySelector(`.product-card[data-id="${productId}"]`);
+        
+        if (card) {
+            card.setAttribute('data-stock', newStock);
+            const stockElement = card.querySelector('.quantity');
+            
+            if (newStock <= 3 && newStock > 0) {
+                stockElement.className = 'quantity stock-low';
+                stockElement.textContent = `Last ${newStock} in stock!`;
+            } else if (newStock == 0) {
+                stockElement.className = 'quantity stock-out';
+                stockElement.textContent = 'Out of stock!';
+                card.style.opacity = '0.6';
+            } else {
+                stockElement.className = 'quantity stock-good';
+                stockElement.textContent = `Qty: ${newStock} left`;
+                card.style.opacity = '1';
+            }
+        }
+    }
+
+    function deleteProduct(e) {
+        const productId = e.target.getAttribute('data-id');
+        const card = document.querySelector(`.product-card[data-id="${productId}"]`);
+        
+        if (card && confirm('Are you sure you want to delete this product?')) {
+            card.remove();
+            loadProducts(); // Reload the products list
+        }
+    }
+
+    function addNewProduct() {
+        const itemId = document.getElementById('newItemId').value.toUpperCase();
+        const itemName = document.getElementById('newItemName').value;
+        const price = parseFloat(document.getElementById('newItemPrice').value);
+        const stock = parseInt(document.getElementById('newItemStock').value);
+        const imageUrl = document.getElementById('newItemImage').value;
+
+        if (!itemId || !itemName || !price || !stock) {
+            alert('Please fill in all required fields!');
+            return;
+        }
+
+        // Check if item ID already exists
+        if (document.querySelector(`.product-card[data-id="${itemId}"]`)) {
+            alert('Product ID already exists!');
+            return;
+        }
+
+        // Create new product card
+        const productGrid = document.querySelector('.product-grid');
+        const newProductCard = document.createElement('div');
+        newProductCard.className = 'product-card';
+        newProductCard.setAttribute('data-id', itemId);
+        newProductCard.setAttribute('data-price', price);
+        newProductCard.setAttribute('data-stock', stock);
+        
+        newProductCard.innerHTML = `
+            <div class="product-id">${itemId}</div>
+            <img src="${imageUrl || 'https://via.placeholder.com/100x100?text=No+Image'}" alt="${itemName}">
+            <h6>${itemName}</h6>
+            <p class="price">Rs ${price.toFixed(2)}</p>
+            <p class="quantity ${stock <= 3 ? 'stock-low' : 'stock-good'}">${stock <= 3 ? `Last ${stock} in stock!` : `Qty: ${stock} left`}</p>
+        `;
+
+        // Add click event
+        newProductCard.addEventListener('click', function() {
+            selectProduct(this);
+        });
+
+        // Add to the first product grid (Savory Snacks)
+        productGrid.appendChild(newProductCard);
+
+        // Clear form
+        document.getElementById('newItemId').value = '';
+        document.getElementById('newItemName').value = '';
+        document.getElementById('newItemPrice').value = '';
+        document.getElementById('newItemStock').value = '';
+        document.getElementById('newItemImage').value = '';
+
+        // Reload products list
+        loadProducts();
+        
+        alert('Product added successfully!');
+    }
+
+    function changePassword() {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
+
+        if (newPassword.length < 4) {
+            alert('Password must be at least 4 characters long!');
+            return;
+        }
+
+        // In a real application, you would save this to a secure backend
+        alert('Password updated successfully! (Note: This is frontend only - implement backend for real security)');
+        
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+    }
+
+    function updateSystemStats() {
+        const products = document.querySelectorAll('.product-card');
+        const transactions = JSON.parse(localStorage.getItem('vending_transactions') || '[]');
+        const lowStockItems = Array.from(products).filter(p => parseInt(p.getAttribute('data-stock')) <= 3).length;
+
+        document.getElementById('totalProducts').textContent = products.length;
+        document.getElementById('totalSales').textContent = transactions.length;
+        document.getElementById('lowStockItems').textContent = lowStockItems;
     }
 </script>
 
